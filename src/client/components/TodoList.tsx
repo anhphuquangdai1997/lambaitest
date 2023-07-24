@@ -10,22 +10,20 @@ import { api } from '@/utils/client/api';
 // }
 
 export const TodoList = () => {
-  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
-  const [filterType, setFilterType] = useState<'all' | 'completed' | 'pending'>('all');
-  
-  const { data: todos = [] } = api.todo.getAll.useQuery({
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([])
+  const [filterType, setFilterType] = useState<'all' | 'completed' | 'pending'>('all')
+  const { data: todos = [],refetch  } = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
-  })
-  
+  });
+
   const { mutate: deleteTodo } = api.todo.delete.useMutation();
-  const handleDeleteTodo = (id: string) => {
+  const handleDeleteTodo = async (id: string) => {
     const parsedId = parseInt(id);
-    if (isNaN(parsedId)) {
-      console.error("Invalid value for id:", id);
-      return;
-    }
-    deleteTodo({ id: parsedId });
+    await deleteTodo({ id: parsedId });
+
+    refetch();
   };
+
   const handleItemClick = (id: string) => {
     if (selectedItemIds.includes(id)) {
       setSelectedItemIds(selectedItemIds.filter(itemId => itemId !== id));
@@ -101,7 +99,7 @@ export const TodoList = () => {
               </label>
               <button
                 className="flex items-center justify-center ml-auto py-1 bg-red-500 text-black text-sm"
-                onClick={() => handleDeleteTodo(todo.id.toString())}
+                onClick={() => handleDeleteTodo(todo.id)}
               >
                 <XMarkIcon className="h-4 w-4" />
               </button>
