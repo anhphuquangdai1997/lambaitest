@@ -3,6 +3,7 @@ import { type SVGProps } from 'react'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { useState } from 'react';
 import { api } from '@/utils/client/api';
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 // interface Todo {
 //   id: number;
@@ -15,6 +16,7 @@ export const TodoList = () => {
   const { data: todos = [],refetch  } = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
   });
+  const [parent, enableAnimations] = useAutoAnimate()
 
   const { mutate: deleteTodo } = api.todo.delete.useMutation();
   const handleDeleteTodo = async (id: string) => {
@@ -69,7 +71,7 @@ export const TodoList = () => {
           Completed
         </button>
       </div>
-      <ul className="grid grid-cols-1 gap-y-3">
+      <ul className="grid grid-cols-1 gap-y-3" ref={parent}>
         {filteredTodos.map((todo) => (
           <li key={todo.id}>
             <div className={`${selectedItemIds.includes(todo.id.toString())
