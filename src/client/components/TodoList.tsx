@@ -101,7 +101,7 @@ export const TodoList = () => {
                 className="flex items-center justify-center ml-auto py-1 bg-red-500 text-black text-sm"
                 onClick={() => handleDeleteTodo(todo.id)}
               >
-                <XMarkIcon className="h-4 w-4" />
+                <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
           </li>
