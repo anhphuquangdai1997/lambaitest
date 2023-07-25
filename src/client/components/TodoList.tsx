@@ -4,6 +4,7 @@ import * as Checkbox from '@radix-ui/react-checkbox'
 import { useState } from 'react';
 import { api } from '@/utils/client/api';
 import { useAutoAnimate } from '@formkit/auto-animate/react'
+import * as Tabs from '@radix-ui/react-tabs';
 
 // interface Todo {
 //   id: number;
@@ -45,32 +46,34 @@ export const TodoList = () => {
 
   return (
     <>
-      <div className="flex pb-10 gap-2">
-      <button
-          className={`px-6 py-3 rounded-full text-sm ${
+       <Tabs.Root className="TabsRoot" defaultValue="tab1">
+        <Tabs.List className="flex pb-10 gap-2" aria-label="Manage your account">
+          <Tabs.Trigger className={` TabsTrigger px-6 py-3 rounded-full text-sm ${
             filterType === 'all' ? 'bg-gray-700 text-white' : 'bg-white'
           }`}
-          onClick={() => setFilterType('all')}
-        >
-          All
-        </button>
-        <button
-          className={`px-6 py-3 rounded-full text-sm ${
+          onClick={() => setFilterType('all')} value="tab1">
+            All
+          </Tabs.Trigger>
+          <Tabs.Trigger className={` TabsTrigger px-6 py-3 rounded-full text-sm ${
             filterType === 'pending' ? 'bg-gray-700 text-white' : 'bg-white'
           }`}
-          onClick={() => setFilterType('pending')}
-        >
-          Pending
-        </button>
-        <button
-          className={`px-6 py-3 rounded-full text-sm ${
+          onClick={() => setFilterType('pending')} value="tab2">
+            Pending
+          </Tabs.Trigger>
+          <Tabs.Trigger className={` TabsTrigger px-6 py-3 rounded-full text-sm ${
             filterType === 'completed' ? 'bg-gray-700 text-white' : 'bg-white'
           }`}
-          onClick={() => setFilterType('completed')}
-        >
-          Completed
-        </button>
-      </div>
+          onClick={() => setFilterType('completed')} value="tab2">
+            Completed
+          </Tabs.Trigger>
+        </Tabs.List>
+        
+        <Tabs.Content className="TabsContent" value="tab1">
+          
+        </Tabs.Content>
+        <Tabs.Content className="TabsContent" value="tab2"></Tabs.Content>
+        <Tabs.Content className="TabsContent" value="tab3"></Tabs.Content>
+      </Tabs.Root>
       <ul className="grid grid-cols-1 gap-y-3" ref={parent}>
         {filteredTodos.map((todo) => (
           <li key={todo.id}>
