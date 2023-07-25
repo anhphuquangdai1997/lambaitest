@@ -1,31 +1,28 @@
-import { type SVGProps } from 'react'
-
-import * as Checkbox from '@radix-ui/react-checkbox'
+import { type SVGProps } from 'react';
+import * as Checkbox from '@radix-ui/react-checkbox';
 import { useState } from 'react';
 import { api } from '@/utils/client/api';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import * as Tabs from '@radix-ui/react-tabs';
 
-// interface Todo {
-//   id: number;
-//   title: string;
-// }
 
 export const TodoList = () => {
-  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
-  const [filterType, setFilterType] = useState<'all' | 'completed' | 'pending'>('all');
-  
-  const { data: todos = [] } = api.todo.getAll.useQuery({
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([])
+  const [filterType, setFilterType] = useState<'all' | 'completed' | 'pending'>('all')
+  const [parent, enableAnimations] = useAutoAnimate()
+  const { data: todos = [],refetch  } = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
-  })
-  
+  });
+
   const { mutate: deleteTodo } = api.todo.delete.useMutation();
-  const handleDeleteTodo = (id: string) => {
+  const handleDeleteTodo = async (id: string) => {
     const parsedId = parseInt(id);
-    if (isNaN(parsedId)) {
-      console.error("Invalid value for id:", id);
-      return;
-    }
-    deleteTodo({ id: parsedId });
+    await deleteTodo({ id: parsedId });
+
+    refetch();
   };
+
+
   const handleItemClick = (id: string) => {
     if (selectedItemIds.includes(id)) {
       setSelectedItemIds(selectedItemIds.filter(itemId => itemId !== id));
@@ -45,39 +42,41 @@ export const TodoList = () => {
 
   return (
     <>
-      <div className="flex pb-10 gap-2">
-      <button
-          className={`px-6 py-3 rounded-full text-sm ${
+      <Tabs.Root className="TabsRoot" defaultValue="tab1">
+        <Tabs.List className="flex pb-10 gap-2" aria-label="Manage your account">
+          <Tabs.Trigger className={` TabsTrigger px-6 py-3 rounded-full text-sm ${
             filterType === 'all' ? 'bg-gray-700 text-white' : 'bg-white'
           }`}
-          onClick={() => setFilterType('all')}
-        >
-          All
-        </button>
-        <button
-          className={`px-6 py-3 rounded-full text-sm ${
+          onClick={() => setFilterType('all')} value="tab1">
+            All
+          </Tabs.Trigger>
+          <Tabs.Trigger className={` TabsTrigger px-6 py-3 rounded-full text-sm ${
             filterType === 'pending' ? 'bg-gray-700 text-white' : 'bg-white'
           }`}
-          onClick={() => setFilterType('pending')}
-        >
-          Pending
-        </button>
-        <button
-          className={`px-6 py-3 rounded-full text-sm ${
+          onClick={() => setFilterType('pending')} value="tab2">
+            Pending
+          </Tabs.Trigger>
+          <Tabs.Trigger className={` TabsTrigger px-6 py-3 rounded-full text-sm ${
             filterType === 'completed' ? 'bg-gray-700 text-white' : 'bg-white'
           }`}
-          onClick={() => setFilterType('completed')}
-        >
-          Completed
-        </button>
-      </div>
+          onClick={() => setFilterType('completed')} value="tab2">
+            Completed
+          </Tabs.Trigger>
+        </Tabs.List>
+        
+        <Tabs.Content className="TabsContent" value="tab1">
+          
+        </Tabs.Content>
+        <Tabs.Content className="TabsContent" value="tab2"></Tabs.Content>
+        <Tabs.Content className="TabsContent" value="tab3"></Tabs.Content>
+      </Tabs.Root>
       <ul className="grid grid-cols-1 gap-y-3">
         {filteredTodos.map((todo) => (
           <li key={todo.id}>
-            <div className={`${selectedItemIds.includes(todo.id.toString())
+            <div
+              className={`${selectedItemIds.includes(todo.id.toString())
                 ? 'bg-gray-50':''} flex items-center rounded-12 border border-gray-200 px-4 py-3 shadow-sm`} 
-                onClick={()=>handleItemClick(todo.id.toString())}
-             
+              onClick={() => handleItemClick(todo.id.toString())}
             >
               <Checkbox.Root
                 id={String(todo.id)}
@@ -101,16 +100,15 @@ export const TodoList = () => {
               </label>
               <button
                 className="flex items-center justify-center ml-auto py-1 bg-red-500 text-black text-sm"
-                onClick={() => handleDeleteTodo(todo.id.toString())}
+                onClick={() => handleDeleteTodo(todo.id)}
               >
-                <XMarkIcon className="h-4 w-4" />
+                <XMarkIcon className="h-5 w-5" />
               </button>
             </div>
           </li>
         ))}
       </ul>
     </>
-
   )
 }
 

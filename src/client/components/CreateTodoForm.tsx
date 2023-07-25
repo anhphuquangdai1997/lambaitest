@@ -42,7 +42,6 @@ export const CreateTodoForm = () => {
       body: todoBody,
     });
     setTodoBody('');
-    
   }
 
   return (
