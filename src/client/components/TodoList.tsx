@@ -5,7 +5,6 @@ import { api } from '@/utils/client/api';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import * as Tabs from '@radix-ui/react-tabs';
 
-
 export const TodoList = () => {
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([])
   const [filterType, setFilterType] = useState<'all' | 'completed' | 'pending'>('all')
