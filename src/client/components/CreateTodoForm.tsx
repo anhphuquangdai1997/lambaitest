@@ -2,27 +2,6 @@ import { useState } from 'react'
 
 import { api } from '@/utils/client/api'
 
-/**
- * QUESTION 1:
- * -----------
- * Style the "Add" button so that it looks like the design in Figma.
- *
- * NOTE: You must use tailwindcss and className. Do not use other methods (eg.
- * inline styles, separate css files, css modules, etc.) unless absolutely
- * necessary. This applies to all styling-related questions in this assignment.
- *
- * Documentation references:
- *  - https://tailwindcss.com
- *  - https://www.youtube.com/watch?v=mr15Xzb1Ook
- *
- *
- *
- * QUESTION 2:
- * -----------
- * Currently our form is not keyboard accessible. Users cannot hit
- * <Enter> right after typing to submit the form (add new todo). Fix this issue.
- */
-
 export const CreateTodoForm = () => {
   const [todoBody, setTodoBody] = useState('')
 
@@ -35,17 +14,22 @@ export const CreateTodoForm = () => {
       },
     })
 
-  const handleSubmit=(e: React.FormEvent)=>{
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!todoBody.trim()) return;
+    if (!todoBody.trim()) {
+      return
+    }
     createTodo({
       body: todoBody,
-    });
-    setTodoBody('');
+    })
+    setTodoBody('')
   }
 
   return (
-    <form onSubmit={handleSubmit} className="group flex items-center justify-between rounded-12 border border-gray-200 py-2 pr-4 focus-within:border-gray-400">
+    <form
+      onSubmit={handleSubmit}
+      className="group flex items-center justify-between rounded-12 border border-gray-200 py-2 pr-4 focus-within:border-gray-400"
+    >
       <label htmlFor={TODO_INPUT_ID} className="sr-only">
         Add todo
       </label>
@@ -62,7 +46,7 @@ export const CreateTodoForm = () => {
       />
 
       <button
-        className='bg-gray-700 flex px-5 py-2 justify-center items-center gap-8 rounded-full text-white text-sm'
+        className="flex items-center justify-center gap-2 rounded-full bg-gray-700 px-5 py-2 text-sm text-white hover:bg-gray-800 focus:outline-none"
         type="button"
         disabled={isCreatingTodo}
         onClick={() => {
